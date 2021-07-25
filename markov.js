@@ -37,15 +37,23 @@ class MarkovMachine {
 
   makeText(numWords = 100) {
     const numWordsAv = Object.keys(this.chains).length;
-    let randNum = Math.floor(Math.random() * numWordsAv);
-    let text = [Object.keys(this.chains)[randNum]];
+    let randNum, text;
+    do {
+      randNum = Math.floor(Math.random() * numWordsAv);
+      text = [Object.keys(this.chains)[randNum]];
+    } while (text[0] === text[0].toLowerCase())
 
+    if (text[0].slice(-1) === '.') {
+      return text.toString();
+    }
+    
     for (let i = 0; i < numWords - 1; i++) {
       let randNum = Math.floor(Math.random() * this.chains[text[i]].length);
-      if (this.chains[text[i]][randNum] === null) {
+      if (this.chains[text[i]][randNum] === null ) {
         break;
       } else {
         text.push(this.chains[text[i]][randNum])
+        if (this.chains[text[i]][randNum].slice(-1) ==='.') break;
       }
     }
     return text.join(" ")
@@ -54,6 +62,8 @@ class MarkovMachine {
 }
 
 
-
 module.exports = {MarkovMachine}
 
+let mm = new MarkovMachine("I am Sam. Sam I am. So are you. You are you too.");
+let text = mm.makeText(numWords=10);
+console.log(text)
